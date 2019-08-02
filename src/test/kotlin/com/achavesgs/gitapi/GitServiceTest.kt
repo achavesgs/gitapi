@@ -5,6 +5,7 @@ import com.achavesgs.gitapi.entities.UserProfileDTO
 import com.achavesgs.gitapi.repository.GitClientImpl
 import com.achavesgs.gitapi.service.GitService
 import org.assertj.core.api.Assertions
+import org.hamcrest.Matcher
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
