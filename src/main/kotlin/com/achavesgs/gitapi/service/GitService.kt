@@ -11,7 +11,7 @@ class GitService(val client: GitClient) {
 
     fun getUserProfile(username: String): UserProfileDTO? {
         val user = client.getUserProfile(username)
-//        if (user == null) throw UserNotFoundException()
+        if (user == null) throw UserNotFoundException()
         return user
     }
 

@@ -1,5 +1,6 @@
 package com.achavesgs.gitapi
 
+import com.achavesgs.gitapi.controller.GitController
 import com.achavesgs.gitapi.entities.GitRepositoryDTO
 import com.achavesgs.gitapi.entities.UserProfileDTO
 import com.achavesgs.gitapi.repository.GitClientImpl
@@ -19,13 +20,13 @@ import org.springframework.test.context.junit4.SpringRunner
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
-class GitServiceTest {
+class GitControllerTest {
 
     @InjectMocks
-    val service: GitService? = null
+    val controller: GitController? = null
 
     @Mock
-    val client: GitClientImpl? = null
+    val service: GitService? = null
 
     @Before
     fun initMock(){
@@ -40,8 +41,8 @@ class GitServiceTest {
 
 
 
-        Mockito.`when`(client?.getUserProfile("user1")).thenReturn(userProfile)
-        Assert.assertEquals(1, service?.getUserProfile("user1")?.id)
+        Mockito.`when`(service?.getUserProfile("user1")).thenReturn(userProfile)
+        Assert.assertNotNull(controller?.getUserProfile("user1"))
     }
 
     @Test
@@ -60,7 +61,7 @@ class GitServiceTest {
                         html_url = "https://github.com/usuario2"
                 ))
 
-        Mockito.`when`(client?.getAllRepositories("user1")).thenReturn(repositories)
-        Assert.assertNotNull(service?.getAllRepositories("user1"))
+        Mockito.`when`(service?.getAllRepositories("user1")).thenReturn(repositories)
+        Assert.assertNotNull(controller?.getAllRepositories("user1"))
     }
 }

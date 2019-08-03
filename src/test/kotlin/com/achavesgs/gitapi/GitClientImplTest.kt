@@ -1,51 +1,48 @@
 package com.achavesgs.gitapi
 
-import com.achavesgs.gitapi.entities.UserProfileDTO
 import com.achavesgs.gitapi.repository.GitClientImpl
 import com.achavesgs.gitapi.repository.domain.GitUserProfile
-import com.achavesgs.gitapi.service.interfaces.GitClient
-import org.hamcrest.core.IsEqual
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.restassured.RestAssured.expect
+import org.assertj.core.api.Assertions
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.mockito.junit.MockitoJUnitRunner
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.web.client.MockRestServiceServer
+import org.springframework.boot.test.autoconfigure.web.client.RestClientTest
 import org.springframework.test.context.junit4.SpringRunner
-import org.springframework.boot.test.web.client.TestRestTemplate
-import java.net.URI
-import org.springframework.web.client.RestTemplate
-import org.mockito.Mock
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import org.junit.runner.RunWith
+import org.springframework.http.MediaType
+import org.springframework.test.web.client.match.MockRestRequestMatchers
+import org.springframework.test.web.client.response.MockRestResponseCreators
 import java.time.LocalDateTime
 import java.time.Month
+import org.springframework.web.client.RestTemplate
 
 
-@RunWith(MockitoJUnitRunner::class)
-@SpringBootTest
+
+
+@RunWith(SpringRunner::class)
+@RestClientTest(GitClientImpl::class)
 class GitClientImplTest {
 
-    @InjectMocks
+    @Autowired
     private val client: GitClientImpl? = null
 
-    @Mock
-    private val restTemplate: RestTemplate? = null
+    @Autowired
+    private var server: MockRestServiceServer? = null
+
+    @Autowired
+    private val template: RestTemplate? = null
+
+    @Autowired
+    private val objectMapper: ObjectMapper? = null
 
     @Before
-    fun initMock(){
-        MockitoAnnotations.initMocks(this)
-    }
-
-    @Test
-    fun getUserProfileTest(){
-        val userProfile = UserProfileDTO( id = 1, login = "user1", name = "Usuário 1", avatar_url = "https://api.github.com/users/user1",
-                html_url = "https://github.com/usuario1")
-
-        val user = GitUserProfile (id = 26801558, login = "achavesgs", node_id = "MDQ6VXNlcjI2ODAxNTU4", avatar_url = "avatar_url",
+    @Throws(Exception::class)
+    fun setUp() {
+        val userProfile = objectMapper?.writeValueAsString(GitUserProfile (id = 26801558, login = "achavesgs", node_id = "MDQ6VXNlcjI2ODAxNTU4", avatar_url = "avatar_url",
                 gravatar_id= "",
                 url= "https://api.github.com/users/achavesgs",
                 html_url= "https://github.com/achavesgs",
@@ -71,13 +68,20 @@ class GitClientImplTest {
                 public_gists= 0,
                 followers= 0,
                 following= 0,
-                created_at= LocalDateTime.of(2017,Month.MARCH,30,19,33,53),
+                created_at= LocalDateTime.of(2017, Month.MARCH,30,19,33,53),
                 updated_at= LocalDateTime.of(2019, Month.JULY,31,1,13,14)
-        )
+        ))
 
-        Mockito.`when`(restTemplate?.getForEntity("https://api.github.com/users/achavesgs",GitUserProfile::class.java)).thenReturn(ResponseEntity<GitUserProfile>(user, HttpStatus.OK))
-        val response = client?.getUserProfile("achavesgs")
-        Assert.assertThat(response?.avatar_url, IsEqual.equalTo("avatar_url"))
+        server?.expect(MockRestRequestMatchers.requestTo("https://api.github.com/users"))
+                ?.andRespond(MockRestResponseCreators.withSuccess(userProfile!!, MediaType.APPLICATION_JSON))
     }
 
+    @Test
+    @Throws(Exception::class)
+    fun whenCallingGetUserDetails_thenClientMakesCorrectCall() {
+
+        val details = this.client?.getUserProfile("achavesgs")
+
+        Assertions.assertThat(details?.id==26801558.toLong())
+    }
 }

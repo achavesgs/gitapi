@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate
 
 
 @Component
-class GitClientImpl: GitClient {
+class GitClientImpl(): GitClient {
 
     var logger = LoggerFactory.getLogger(GitClientImpl::class.java)
 
