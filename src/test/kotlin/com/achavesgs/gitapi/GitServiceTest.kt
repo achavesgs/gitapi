@@ -2,6 +2,7 @@ package com.achavesgs.gitapi
 
 import com.achavesgs.gitapi.entities.GitRepositoryDTO
 import com.achavesgs.gitapi.entities.UserProfileDTO
+import com.achavesgs.gitapi.exception.UserNotFoundException
 import com.achavesgs.gitapi.repository.GitClientImpl
 import com.achavesgs.gitapi.service.GitService
 import org.assertj.core.api.Assertions
@@ -33,18 +34,6 @@ class GitServiceTest {
     }
 
     @Test
-    fun getUserProfileTest(){
-
-        val userProfile = UserProfileDTO( id = 1, login = "user1", name = "Usuário 1", avatar_url = "https://api.github.com/users/user1",
-        html_url = "https://github.com/usuario1")
-
-
-
-        Mockito.`when`(client?.getUserProfile("user1")).thenReturn(userProfile)
-        Assert.assertEquals(1, service?.getUserProfile("user1")?.id)
-    }
-
-    @Test
     fun getAllRepositoriesTest(){
 
         val repositories = listOf(GitRepositoryDTO(
@@ -55,12 +44,26 @@ class GitServiceTest {
         ),
                 GitRepositoryDTO(
                         id = 2,
-                        name = "user2",
+                        name = "user1",
                         description = "user description ",
-                        html_url = "https://github.com/usuario2"
+                        html_url = "https://github.com/usuario1/repo1"
                 ))
+
 
         Mockito.`when`(client?.getAllRepositories("user1")).thenReturn(repositories)
         Assert.assertNotNull(service?.getAllRepositories("user1"))
+    }
+
+    @Test
+    fun `testing getUserProfileException`() {
+        Assertions.assertThatExceptionOfType(UserNotFoundException::class.java).isThrownBy {
+            val userProfile = UserProfileDTO( id = 1, login = "user1", name = "Usuário 1", avatar_url = "https://api.github.com/users/user1",
+                    html_url = "https://github.com/usuario1")
+
+
+
+            Mockito.`when`(client?.getUserProfile("user1")).thenReturn(userProfile)
+            service?.getUserProfile("user1")?.id
+        }
     }
 }

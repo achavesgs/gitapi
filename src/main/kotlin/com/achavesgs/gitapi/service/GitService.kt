@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service
 class GitService(val client: GitClient) {
 
     fun getUserProfile(username: String): UserProfileDTO? {
-        val user = client.getUserProfile(username)
+        val user = client?.getUserProfile(username)
         if (user == null) throw UserNotFoundException()
         return user
     }
 
     fun getAllRepositories(username: String): List<GitRepositoryDTO>? {
-        return client.getAllRepositories(username)
+        return client?.getAllRepositories(username)
     }
 }
