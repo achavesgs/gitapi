@@ -5,6 +5,7 @@ import com.achavesgs.gitapi.entities.UserProfileDTO
 import com.achavesgs.gitapi.exception.UserNotFoundException
 import com.achavesgs.gitapi.repository.GitClientImpl
 import com.achavesgs.gitapi.service.GitService
+import com.achavesgs.gitapi.service.interfaces.GitClient
 import org.assertj.core.api.Assertions
 import org.hamcrest.Matcher
 import org.junit.Assert
@@ -26,7 +27,7 @@ class GitServiceTest {
     val service: GitService? = null
 
     @Mock
-    val client: GitClientImpl? = null
+    val client: GitClient? = null
 
     @Before
     fun initMock(){
@@ -63,7 +64,7 @@ class GitServiceTest {
 
 
             Mockito.`when`(client?.getUserProfile("user1")).thenReturn(userProfile)
-            service?.getUserProfile("user1")?.id
+            service?.getUserProfile("user1")
         }
     }
 }
