@@ -1,19 +1,19 @@
-#API Github
+# API Github
 
-##Objetivo
+## Objetivo
 Esta api foi desenvolvida com o intuito de retornar as informações de "User Profile" e "Profile Repositories" de um usuário do Github
 
-##Benefícios
+## Benefícios
 Retornar informações de um usuário do Github de forma mais clara e somente com informações relevantes
 
 
-##Como utilizar
-###API para retornar os dados de um usuário:
+## Como utilizar
+### API para retornar os dados de um usuário:
 
-####Request
+#### Request
 http://localhost:8090/api/users/{username} - substituir "username" pelo usuário que deseja consultar
 
-####Response
+#### Response
 {
   "id": 0,
   "login": "usuario",
@@ -23,12 +23,12 @@ http://localhost:8090/api/users/{username} - substituir "username" pelo usuário
 }
 
 
-###API para retornar lista de repositórios de um usuário
+### API para retornar lista de repositórios de um usuário
 
-####Request
+#### Request
 http://localhost:8090/api/users/{username}/repos - substituir "username" pelo usuário que deseja consultar
 
-####Response
+#### Response
 [
   {
     "id": 0,
